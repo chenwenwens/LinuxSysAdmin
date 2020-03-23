@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="黄玮" />
+  <title>Linux系统与网络管理</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Linux系统与网络管理</h1>
+<p class="author">黄玮</p>
+</header>
+<h1 id="第五章web服务器">第五章：Web服务器</h1>
+<hr />
+<p><a href="https://en.wikipedia.org/wiki/Cyberspace">The term “Cyberspace” started to become a de facto synonym for the Internet, and later the <strong><em>World Wide Web</em></strong></a></p>
+<ul>
+<li>英国科学家Tim Berners-Lee在1989年发明了“万维网”（World Wide Web, 简称WWW或Web）
+<ul>
+<li>Web是一个信息空间，文档和其他Web资源使用URL(Uniform Resource Locator)标识并用超链接相互之间连接在一起，通过互联网访问到。</li>
+</ul></li>
+</ul>
+<h1 id="www的技术内核">WWW的技术内核</h1>
+<hr />
+<ul>
+<li>URI: Universal Resource <strong>Identifiers</strong></li>
+<li>HTML: HyperText Markup Language</li>
+<li>HTTP: HyperText Transfer Protocol</li>
+</ul>
+<h1 id="协议族">协议族</h1>
+<hr />
+<ul>
+<li><p><a href="https://datatracker.ietf.org/doc/rfc1630/"><strong>Universal</strong> Resource <strong>Identifiers</strong> in WWW A Unifying Syntax for the Expression of Names and Addresses of Objects on the Network as used in the World-Wide Web <strong><em>RFC 1630</em></strong></a></p></li>
+<li><p><a href="https://datatracker.ietf.org/doc/rfc2396/"><strong>Uniform</strong> Resource Identifiers (URI): Generic Syntax <strong><em>RFC 2396</em></strong></a></p></li>
+<li><p><a href="https://datatracker.ietf.org/doc/rfc1738/"><strong>Uniform</strong> Resource <strong>Locators</strong> (URL) <strong><em>RFC 1738</em></strong></a></p></li>
+<li><p><a href="https://www.w3.org/TR/html4/">HTML 4.01 Specification W3C Recommendation 24 December 1999</a></p></li>
+<li><p><a href="https://www.w3.org/TR/html5/">HTML5 by W3C</a></p></li>
+</ul>
+<hr />
+<ul>
+<li><a href="https://datatracker.ietf.org/doc/rfc1945/">Hypertext Transfer Protocol – HTTP/1.0 <strong><em>RFC 1945</em></strong></a></li>
+<li><a href="https://datatracker.ietf.org/doc/rfc2616/">Hypertext Transfer Protocol – HTTP/1.1 <strong><em>RFC 2616</em></strong></a></li>
+<li><a href="https://datatracker.ietf.org/doc/rfc7540/">Hypertext Transfer Protocol Version 2 (HTTP/2) <strong><em>RFC 7540</em></strong></a></li>
+</ul>
+<hr />
+<ul>
+<li><a href="https://datatracker.ietf.org/doc/rfc2617">HTTP Authentication: Basic and Digest Access Authentication <strong><em>RFC 2617</em></strong></a></li>
+<li><a href="https://datatracker.ietf.org/doc/rfc2145">Use and Interpretation of HTTP Version Numbers <strong><em>RFC 2145</em></strong></a></li>
+<li><a href="https://datatracker.ietf.org/doc/rfc6265">HTTP State Management Mechanism <strong><em>RFC 6265</em></strong></a></li>
+<li><a href="https://datatracker.ietf.org/doc/rfc2069">An Extension to HTTP : Digest Access Authentication <strong><em>RFC 2069</em></strong></a></li>
+<li><a href="https://datatracker.ietf.org/doc/rfc6455/">The WebSocket Protocol <strong><em>RFC 6455</em></strong></a></li>
+</ul>
+<h1 id="关于uri-url-urn-iri等等标识符"><a href="https://www.w3.org/TR/2001/NOTE-uri-clarification-20010921/">关于URI / URL / URN / IRI等等标识符</a></h1>
+<hr />
+<p>传统观点</p>
+<ul>
+<li>90年代中期以前，人们认为URI的类型应该至少包括2类：资源地址（URL）和资源名称（URN, Uniform Resource Names）。彼时，URI就被分为2类：URL和URN。后来，有人又建议URI还可以标识元数据而不仅是资源本身。比如，提出了统一资源<strong><em>引用</em></strong>URC（<strong><em>citation</em></strong>）。因此，URI被认为应该进行命名空间划分：URL、URN和其他子命名空间。
+<ul>
+<li>例如：<strong>http:</strong>是一个URL协议标识符，<strong>isbn:</strong>是一个URN协议标识符</li>
+</ul></li>
+</ul>
+<hr />
+<p>现代观点</p>
+<ul>
+<li>现代Web技术视角重新审视上述术语概念时认为：根据协议标识符来划分URI子（命名）空间已经没有必要了。Web标识用途的协议标识符都属于URI协议，<strong>http:</strong>和<strong>urn:</strong>都属于URI协议，区别就在于<strong>命名空间</strong>。URL就是一种特殊的URI，而且更被广泛使用在各种技术讨论场合。一个<strong>http</strong>协议的URI就是一个URL，URL协议主要就用来特指除去URN之类的URI。</li>
+</ul>
+<hr />
+<p>IRI (International Resource Identifier)：URI语法的扩展，用来支持非ASCII字符集，例如UTF-8就是最为广泛支持的字符编码集合。</p>
+<h1 id="web技术架构">Web技术架构</h1>
+<hr />
+<p>用户视角的基本Web技术架构</p>
+<p><a href="http://teaching.shu.ac.uk/aces/rh1/de/web_based_systems_architectures_1_tutorial.htm"><img src="images/chap0x05/user-web-arch.gif" /></a></p>
+<hr />
+<p>组件视角的基本Web技术架构</p>
+<p><a href="https://msdn.microsoft.com/en-us/library/ee658099.aspx"><img src="images/chap0x05/ms-web-arch.png" /></a></p>
+<h1 id="服务器">服务器</h1>
+<hr />
+<p>NetCraft在2017年1月根据全球1,800,047,111个站点、6,328,006台服务器的信息统计结果绘制更新以下Web服务器市场占有率统计图</p>
+<p><a href="https://news.netcraft.com/archives/category/web-server-survey"><img src="images/chap0x05/web-svr-share-netcraft.png" /></a></p>
+<hr />
+<p>w3techs根据<a href="http://www.alexa.com/">Alexa排名</a>全球前1000万网站使用的WEB服务器信息统计</p>
+<p><a href="https://w3techs.com/technologies/cross/web_server/ranking"><img src="images/chap0x05/top1000w-web-svr-share.png" /></a></p>
+<hr />
+<p>据w3techs在2017年1月19日的统计数据表明：</p>
+<ul>
+<li>在全球Top 1,000的网站中，有51.9%的网站在使用Nginx</li>
+<li>在全球Top 10,000的网站中，有57.8%的网站在使用Nginx</li>
+<li>在全球Top 100,000的网站中，有50.3%的网站在使用Nginx</li>
+</ul>
+<hr />
+<p>其他视角探索WEB服务器的市场占有率</p>
+<ul>
+<li><a href="https://www.shodan.io/search?query=HTTP">使用Shodan探索HTTP服务类型的服务器返回结果</a></li>
+<li><a href="https://www.zoomeye.org/search?q=+service%3Ahttp">使用ZoomEye探索HTTP服务类型的服务器返回结果</a></li>
+</ul>
+<hr />
+<p>接下来，我们重点关注</p>
+<ul>
+<li><a href="https://nginx.org/">nginx</a>
+<ul>
+<li><a href="https://github.com/openresty/openresty">OpenResty</a></li>
+<li><a href="https://github.com/Mashape/kong">Kong</a></li>
+<li><a href="http://tengine.taobao.org/">Tengine</a></li>
+<li><a href="https://github.com/alexazhou/VeryNginx">VeryNginx</a></li>
+</ul></li>
+</ul>
+<h1 id="nginx"><a href="http://nginx.org/en/">nginx</a></h1>
+<hr />
+<p>核心特性列表</p>
+<ul>
+<li>HTTP服务器</li>
+<li>邮件代理服务器</li>
+<li>TCP/UDP代理服务器</li>
+</ul>
+<p>商业版支持<a href="https://www.nginx.com/">nginx plus</a></p>
+<hr />
+<h2 id="nginx-衍生版代表-openresty">nginx 衍生版代表 <a href="https://github.com/openresty/openresty">OpenResty</a></h2>
+<ul>
+<li>OpenResty ™ 是一个基于 Nginx 与 Lua 的高性能 Web 平台</li>
+<li>其内部集成了大量精良的 Lua 库、第三方模块以及大多数的依赖项
+<ul>
+<li>Web 开发人员和系统工程师可以使用 Lua 脚本语言调动 Nginx 支持的各种 C 以及 Lua 模块，快速构造出足以胜任 10K 乃至 1000K 以上单机并发连接的高性能 Web 应用系统。</li>
+</ul></li>
+<li>OpenResty 的目标是让你的Web服务直接跑在 Nginx 服务内部
+<ul>
+<li>通过lua赋予Nginx更完备的在线可编程能力</li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="nginx-衍生版代表-kong">nginx 衍生版代表 <a href="https://github.com/Mashape/kong">Kong</a></h2>
+<p>基于OpenResty构建的API网关和微服务管理系统</p>
+<p><img src="images/chap0x05/kong-arch.png" /></p>
+<hr />
+<h2 id="nginx-衍生版代表-tengine">nginx 衍生版代表 <a href="http://tengine.taobao.org/">Tengine</a></h2>
+<p>Tengine是由淘宝网发起的Web服务器项目。它在Nginx的基础上，针对大访问量网站的需求，添加了很多高级功能和特性。Tengine的性能和稳定性已经在大型的网站如淘宝网，天猫商城等得到了很好的检验。它的最终目标是打造一个高效、稳定、安全、易用的Web平台。</p>
+<p>从2011年12月开始，Tengine成为一个开源项目，Tengine团队在积极地开发和维护着它。Tengine团队的核心成员来自于淘宝、搜狗等互联网企业。</p>
+<blockquote>
+<p>早期项目开发者中包括OpenResty项目的核心开发者，因此和OpenResty具有很多相同或相似特性（例如Lua支持）</p>
+</blockquote>
+<hr />
+<h2 id="nginx-衍生版代表-verynginx">nginx 衍生版代表 <a href="https://github.com/alexazhou/VeryNginx">VeryNginx</a></h2>
+<p>VeryNginx基于lua_nginx_module(openrestry)开发，实现了高级的WEB防火墙、访问统计和其他的一些功能。集成在Nginx中运行，扩展了Nginx本身的功能，并提供了友好的Web交互界面。</p>
+<h1 id="应用程序服务器支持服务器端脚本运行">应用程序服务器（支持服务器端脚本运行）</h1>
+<hr />
+<ul>
+<li>PHP
+<ul>
+<li>PHP-FPM / Apache的mod_php / swoole</li>
+</ul></li>
+<li>nodejs（已内置）</li>
+<li>python
+<ul>
+<li>uwsgi兼容Web服务器 / wsgi兼容WEB服务器 / fastcgi兼容WEB服务器 / Apache的mod_python</li>
+</ul></li>
+<li>ruby
+<ul>
+<li>unicorn / Phusion Passenger</li>
+</ul></li>
+</ul>
+<h1 id="cgi-fastcgi">CGI / FastCGI</h1>
+<hr />
+<ul>
+<li>CGI: Common Gateway Interface（通用网关接口）
+<ul>
+<li>CGI描述了客户端和这个程序之间传输数据的一种标准，是一种协议规范，独立于具体编程语言实现（只要这种语言具有标准输入、输出和环境变量）</li>
+</ul></li>
+</ul>
+<hr />
+<p><img src="images/chap0x05/cgi-1.png" /></p>
+<hr />
+<p><img src="images/chap0x05/cgi-2.png" /></p>
+<hr />
+<ul>
+<li>FastCGI：是CGI的一种改进方案，FastCGI像是一个常驻(long-lived)型的CGI， 它可以一直执行，在请求到达时不会花费时间去fork一个进程来处理(这是CGI最为人诟病的fork-and-execute模式)。
+<ul>
+<li>PHP-FPM（FastCGI Process Manager）：FastCGI协议的PHP版本实现，不需要和Web服务器在同一台物理主机上。</li>
+</ul></li>
+</ul>
+<hr />
+<p><img src="images/chap0x05/fastcgi-1.png" /></p>
+<hr />
+<p><img src="images/chap0x05/fastcgi-2.png" /></p>
+<hr />
+<p><img src="images/chap0x05/fastcgi-3.png" /></p>
+<hr />
+<p>⚠️ <a href="http://php.net/manual/zh/install.fpm.configuration.php">避免php-fpm进程被远程任意访问到</a></p>
+<p><a href="https://github.com/adoy/PHP-FastCGI-Client">adoy/PHP-FastCGI-Client: This PHP class handles the communication with a FastCGI (FCGI) application using the FastCGI protocol.</a></p>
+<h1 id="apache-mod_php"><a href="https://2bits.com/articles/apache-fcgid-acceptable-performance-and-better-resource-utilization.html">Apache mod_php</a></h1>
+<hr />
+<ul>
+<li>mod_php作为一个完整的PHP解释器内置在Apache服务的每一个工作进程之中
+<ul>
+<li>优点
+<ul>
+<li>安装和配置简单，开箱即用</li>
+<li>不需要像CGI模式那样去调用外部进程</li>
+<li>不需要像FastCGI模式那样通过socket去和外部进程通信</li>
+<li>APC缓存被Apache所有子进程共享</li>
+</ul></li>
+<li>缺点
+<ul>
+<li>每个工作进程都需要内置一个mod_php解释器，导致总体内存占用量较高</li>
+<li>对于静态文件访问服务的工作进程来说，也需要加载mod_php解释器</li>
+</ul></li>
+</ul></li>
+</ul>
+<h1 id="以nginxphp-fpm为例搭建一个web站点">以nginx+php-fpm为例搭建一个Web站点</h1>
+<hr />
+<p><a href="https://www.digitalocean.com/community/tutorials/how-to-install-wordpress-with-lemp-on-ubuntu-16-04">How To Install WordPress with LEMP on Ubuntu 16.04</a></p>
+<h1 id="客户端">客户端</h1>
+<hr />
+<ul>
+<li>GUI
+<ul>
+<li>桌面、手机、平板等浏览器</li>
+</ul></li>
+<li>CLI
+<ul>
+<li>curl、wget、w3m等</li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="curl是什么">cURL是什么</h2>
+<p>以下摘自cURL的man手册页说明：</p>
+<p>curl is a tool to transfer data from or to a server, using one of the supported protocols (DICT, <strong><em>FILE</em></strong>, FTP, FTPS, GOPHER, <strong>HTTP</strong>, <strong>HTTPS</strong>, IMAP, IMAPS, LDAP, LDAPS, POP3, POP3S, RTMP, RTSP, SCP, SFTP, SMTP, SMTPS, TELNET and TFTP). The command is designed to work without user interaction.</p>
+<p>curl offers a busload of useful tricks like proxy support, user authentication, FTP upload, HTTP post, SSL connections, cookies, file transfer resume, Metalink, and more. As you will see below, the number of features will make your head spin!</p>
+<hr />
+<h2 id="http是什么">HTTP是什么</h2>
+<p>以下摘自<a href="http://tools.ietf.org/rfc/rfc2616.txt">RFC 2616</a>:</p>
+<p>The Hypertext Transfer Protocol (HTTP) is an <strong>application-level</strong> protocol for <strong><em>distributed</em></strong>, <strong><em>collaborative</em></strong>, <strong><em>hypermedia</em></strong> information systems. It is a generic, <strong>stateless</strong>, protocol which can be used for many tasks beyond its use for hypertext, such as <strong><em>name servers</em></strong> and <strong><em>distributed object management systems</em></strong>, through <strong><em>extension of its request methods, error codes and headers</em></strong> [47]. A feature of HTTP is the typing and negotiation of data representation, allowing systems to be built independently of the data being transferred.</p>
+<h1 id="http-in-action">HTTP in Action</h1>
+<hr />
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># 标准HTTP GET请求标准静态Web Server</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="ex">curl</span> -v http://sec.cuc.edu.cn</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co"># 标准HTTP GET请求有前端缓存系统的静态Web Server</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="ex">curl</span> -v https://www.qq.com -o q.html </span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="ex">curl</span> -v https://www.taobao.com -o t.html</span>
+<span id="cb1-7"><a href="#cb1-7"></a></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="co"># 标准HEAD请求</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="ex">curl</span> -v -I http://sec.cuc.edu.cn -o s.html</span>
+<span id="cb1-10"><a href="#cb1-10"></a></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="co"># 服务器端使用自定义HTTP响应头</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="ex">curl</span> -v https://www.baidu.com</span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="ex">curl</span> -vv https://www.alipay.com</span>
+<span id="cb1-14"><a href="#cb1-14"></a></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="co"># 处理302和301重定向</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="ex">curl</span> -vv -L http://www.baidu.com</span>
+<span id="cb1-17"><a href="#cb1-17"></a></span>
+<span id="cb1-18"><a href="#cb1-18"></a><span class="co"># 使用自定义User-Agent，绕过服务器端对客户端类型的检测和限制</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a><span class="ex">curl</span> -vv -L -A <span class="st">&quot;Android 250.0&quot;</span> https://www.baidu.com -o baidu_a.html</span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="ex">curl</span> -vv -L https://www.baidu.com -o baidu_c.html</span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="co"># 比较使用不同User-Agent访问百度首页得到的页面差异</span></span>
+<span id="cb1-22"><a href="#cb1-22"></a><span class="ex">vimdiff</span> baidu_a.html baidu_c.html</span>
+<span id="cb1-23"><a href="#cb1-23"></a></span>
+<span id="cb1-24"><a href="#cb1-24"></a><span class="co"># GET传参</span></span>
+<span id="cb1-25"><a href="#cb1-25"></a><span class="ex">curl</span> -vv <span class="st">&#39;https://www.baidu.com/s?ie=utf-8&amp;f=8&amp;rsv_bp=0&amp;rsv_idx=1&amp;tn=baidu&amp;wd=%E4%BC%A0%E5%AA%92%E5%A4%A7%E5%AD%A6&#39;</span></span>
+<span id="cb1-26"><a href="#cb1-26"></a><span class="ex">curl</span> <span class="st">&#39;https://www.baidu.com/s?ie=utf-8&amp;f=8&amp;rsv_bp=0&amp;rsv_idx=1&amp;tn=baidu&amp;wd=%E4%BC%A0%E5%AA%92%E5%A4%A7%E5%AD%A6&#39;</span> -H <span class="st">&#39;User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36&#39;</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a><span class="co"># 比较使用不同User-Agent进行百度搜索得到的结果差异</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a><span class="ex">vimdiff</span> baidu_a.html baidu_c.html</span>
+<span id="cb1-29"><a href="#cb1-29"></a></span>
+<span id="cb1-30"><a href="#cb1-30"></a><span class="co"># 启用传输流压缩</span></span>
+<span id="cb1-31"><a href="#cb1-31"></a><span class="ex">curl</span> -vv -H <span class="st">&#39;Accept-Encoding: gzip, deflate&#39;</span> https://www.baidu.com -o baidu.html.gz</span>
+<span id="cb1-32"><a href="#cb1-32"></a></span>
+<span id="cb1-33"><a href="#cb1-33"></a><span class="co"># 使用自定义HTTP Request Header + POST表单数据</span></span>
+<span id="cb1-34"><a href="#cb1-34"></a><span class="co"># </span><span class="al">TODO</span><span class="co">-1 请模拟学校教务处网站的登录表单完成命令行登录学校教务处任务</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a><span class="co"># </span><span class="al">TODO</span><span class="co">-2 模拟登录自己搭建的wordpress站点并使用curl发表一篇blog</span></span></code></pre></div>
+<p>注意到上面所有服务器设置的时间均使用到了一个关键词<a href="http://baike.baidu.com/item/%E4%B8%96%E7%95%8C%E6%97%B6/692237"><strong>GMT</strong></a>，简单来说这是为了解决全球不同地区的时区差异问题而进行的一项关于时间的标准化设置。</p>
+<h1 id="参考文献">参考文献</h1>
+<hr />
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/World_Wide_Web">World Wide Web from Wikipedia</a></li>
+<li><a href="http://www.aosabook.org/en/distsys.html">Scalable Web Architecture and Distributed Systems</a></li>
+<li><a href="http://www.mit.edu/~yandros/doc/specs/fcgi-spec.html">FastCGI Specification</a></li>
+<li><a href="http://www.nongnu.org/fastcgi/">FastCGI — The Forgotten Treasure</a></li>
+<li><a href="https://www.digitalocean.com/community/tutorials/understanding-and-implementing-fastcgi-proxying-in-nginx">Understanding and Implementing FastCGI Proxying in Nginx</a></li>
+<li><a href="http://www.cnblogs.com/skynet/p/4173450.html">Nginx + CGI/FastCGI + C/Cpp</a></li>
+<li><a href="http://www.php-internals.com/book/?p=chapt02/02-02-03-fastcgi">FastCGI on 深入理解PHP内核</a></li>
+<li><a href="https://www.slideshare.net/jacques_thekit/modphp-vs-fastcgi-vs-fpm-vs-cli">mod_php vs FastCGI vs FPM vs CLI</a></li>
+<li><a href="https://httpoxy.org/">A CGI application vulnerability for PHP, Go, Python and others</a></li>
+</ul>
+<hr />
+<ul>
+<li><a href="http://curl.haxx.se/docs/httpscripting.html">The Art Of Scripting HTTP Requests Using Curl</a></li>
+<li><a href="http://net.tutsplus.com/tutorials/php/techniques-and-resources-for-mastering-curl/">Techniques for Mastering cUR</a></li>
+<li><a href="http://curl.haxx.se/docs/vulnerabilities.html">curl and libcurl Vulnerabilities Table Overview</a></li>
+</ul>
+</body>
+</html>
